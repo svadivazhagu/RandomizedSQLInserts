@@ -1,3 +1,6 @@
+#svadivazhagu, feb2020
+#code to create strings to insert random data for X amount of fake patients
+
 import faker
 from random import randint
 
