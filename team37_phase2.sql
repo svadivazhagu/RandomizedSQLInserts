@@ -1,4 +1,20 @@
 /* the char lengths were kind of just guessed on */
+/*ALL THE create tables are its own file so we can copy into sqlplus on WPI server and run it */
+/*Part 1 of phase 2 Team 37 Surya Vadivazhagu & James Flynn */
+
+-- Drop the tables first
+DROP TABLE Employee CASCADE CONSTRAINTS;
+DROP TABLE Room CASCADE CONSTRAINTS;
+DROP TABLE Equipment CASCADE CONSTRAINTS;
+DROP TABLE EquipmentType CASCADE CONSTRAINTS;
+DROP TABLE RoomAccess CASCADE CONSTRAINTS;
+DROP TABLE RoomService CASCADE CONSTRAINTS;
+DROP TABLE Patient CASCADE CONSTRAINTS;
+DROP TABLE Doctor CASCADE CONSTRAINTS;
+DROP TABLE Admission CASCADE CONSTRAINTS;
+DROP TABLE Examine CASCADE CONSTRAINTS;
+DROP TABLE StayIn CASCADE CONSTRAINTS;
+
 
 /* Employee */
 CREATE TABLE Employee(
@@ -17,15 +33,14 @@ CREATE TABLE Employee(
 CREATE TABLE Room(
     Num INTEGER NOT NULL PRIMARY KEY,
     Occupied CHAR(1) NOT NULL,
-    CONSTRAINT CHK_Occupied CHECK (Occupied = 0 OR Occupied = 1) /*if occupied, 1, if not, 0 */ 
+    CONSTRAINT CHK_Occupied CHECK (Occupied = 0 OR Occupied = 1) /*if occupied, 1, if not, 0 */
 );
 
 CREATE TABLE EquipmentType(
-    Id VARCHAR(20) NOT NULL PRIMRAY KEY,
+    Id VARCHAR(20) NOT NULL PRIMARY KEY,
     Description VARCHAR(20), /* May or may not have a description */
-    ModelType VARCHAR2(20) NOT NULL,
-    Instructions VARCHAR2(500) /* May or may not have instructions */
-
+    ModelType VARCHAR(20) NOT NULL,
+    Instructions VARCHAR(500) /* May or may not have instructions */
 );
 
 CREATE TABLE Equipment(
@@ -35,7 +50,7 @@ CREATE TABLE Equipment(
     LastInspection DATE,
     RoomNum INTEGER NOT NULL,
     FOREIGN KEY (RoomNum) REFERENCES Room(Num),
-    FOREIGN KEY (TypeId) REFERENCES EquipmentType(Id)
+    FOREIGN KEY (TypeId) REFERENCES EquipmentType(Id),
     CONSTRAINT CHK_Equipment CHECK (LastInspection >= PurchaseYear)
 );
 
@@ -101,15 +116,6 @@ CREATE TABLE StayIn(
     EndDate DATE, /* assuming patient can stay at hospital indefinitely */
     CONSTRAINT PK_StayIn PRIMARY KEY (AdmissionNum, RoomNum, StartDate),
     FOREIGN KEY (AdmissionNum) REFERENCES Admission(AdmissionNum),
-    FOREIGN KEY (RoomNum) REFERENCES Room(RoomNum)
+    FOREIGN KEY (RoomNum) REFERENCES Room(Num)
 );
 
-/* Part 2 Phase 2 */
-
--- Problem 1
-Select Room.Num
-From Room
-Where Occupied = 1;
-
---2
-SELECT Id

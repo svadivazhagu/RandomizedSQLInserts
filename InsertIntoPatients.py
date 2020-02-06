@@ -111,3 +111,5 @@ def printRoomService(numRoomService):
 
 
 
+
+printRooms(2)
