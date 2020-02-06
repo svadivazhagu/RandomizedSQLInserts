@@ -1,4 +1,17 @@
+/* the char lengths were kind of just guessed on */
 
+/* Employee */
+CREATE TABLE Employee(
+    ID INTEGER NOT NULL PRIMARY KEY,
+    FName VARCHAR(30) NOT NULL,
+    LName VARCHAR(30) NOT NULL,
+    Salary FLOAT NOT NULL,
+    JobTitle VARCHAR(30) NOT NULL,
+    OfficeNum VARCHAR(5) NOT NULL UNIQUE,   /* Two employee's can't have the same office so it has to be unique */
+    EmpRank INTEGER NOT NULL, /* 0 = Regular, 1  = Division Manager, 2 = General Manager */
+    SupervisorId INTEGER, /*It's not NOT NULL because General Manager doesn't have a manager so this would be NULL for them. */
+    CONSTRAINT CHK_EmpRank CHECK (EmpRank = 0 OR EmpRank = 1 OR EmpRank = 2)
+);
 
 /* Room entity */
 CREATE TABLE Room(
