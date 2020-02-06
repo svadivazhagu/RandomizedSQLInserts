@@ -119,3 +119,15 @@ CREATE TABLE StayIn(
     FOREIGN KEY (RoomNum) REFERENCES Room(Num)
 );
 
+
+--1
+SELECT Room.Num
+FROM Room
+WHERE Occupied = 1;
+
+--2
+SELECT Employee.ID, Employee.FName, Employee.LName, Employee.Salary
+FROM Employee
+WHERE SupervisorId = 10
+AND
+JobTitle = 'Regular'

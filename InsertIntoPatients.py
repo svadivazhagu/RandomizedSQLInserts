@@ -112,4 +112,7 @@ def printRoomService(numRoomService):
 
 
 
-printRooms(2)
+printRooms(10)
+printPatient(10)
+printDoctors(10)
+
