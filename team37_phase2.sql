@@ -17,7 +17,7 @@ DROP TABLE StayIn CASCADE CONSTRAINTS;
 
 
 /* Employee */
-CREATE TABLE Employee(
+create table Employee(
     ID INTEGER NOT NULL PRIMARY KEY,
     FName VARCHAR(30) NOT NULL,
     LName VARCHAR(30) NOT NULL,
@@ -30,20 +30,20 @@ CREATE TABLE Employee(
 );
 
 /* Room entity */
-CREATE TABLE Room(
+create table Room(
     Num INTEGER NOT NULL PRIMARY KEY,
     Occupied CHAR(1) NOT NULL,
     CONSTRAINT CHK_Occupied CHECK (Occupied = 0 OR Occupied = 1) /*if occupied, 1, if not, 0 */
 );
 
-CREATE TABLE EquipmentType(
+create table EquipmentType(
     Id VARCHAR(20) NOT NULL PRIMARY KEY,
     Description VARCHAR(20), /* May or may not have a description */
     ModelType VARCHAR(20) NOT NULL,
     Instructions VARCHAR(500) /* May or may not have instructions */
 );
 
-CREATE TABLE Equipment(
+create table Equipment(
     Serial VARCHAR(20) NOT NULL PRIMARY KEY,
     TypeId VARCHAR(20) NOT NULL,
     PurchaseYear DATE NOT NULL,
@@ -54,14 +54,14 @@ CREATE TABLE Equipment(
     CONSTRAINT CHK_Equipment CHECK (LastInspection >= PurchaseYear)
 );
 
-CREATE TABLE RoomService(
+create table RoomService(
     RoomNum INTEGER NOT NULL,
     Service CHAR(20) NOT NULL,
     CONSTRAINT PK_RoomService PRIMARY KEY (RoomNum, Service),
     FOREIGN KEY (RoomNum) REFERENCES Room(Num)
 );
 
-CREATE TABLE RoomAccess(
+create table RoomAccess(
     RoomNum INTEGER NOT NULL,
     EmpId INTEGER NOT NULL,
     CONSTRAINT PK_RoomAccess PRIMARY KEY (RoomNum, EmpId),
@@ -69,7 +69,7 @@ CREATE TABLE RoomAccess(
     FOREIGN KEY (EmpId) REFERENCES Employee(Id)
 );
 
-CREATE TABLE Patient(
+create table Patient(
     SSN VARCHAR(9) NOT NULL PRIMARY KEY, /* Assuming it's format 123456789 */
     FirstName VARCHAR(15) NOT NULL,
     LastName VARCHAR(30) NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE Patient(
     TelNum VARCHAR(10) NOT NULL /* Assuming it's format 1234567890 */
 );
 
-CREATE TABLE Doctor(
+create table Doctor(
     Id INTEGER NOT NULL PRIMARY KEY,
     FirstName VARCHAR(15) NOT NULL,
     LastName VARCHAR(30) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE Doctor(
     CONSTRAINT CHK_Gender CHECK (Gender = 'M' OR Gender = 'F')
 );
 
-CREATE TABLE Admission(
+create table Admission(
     AdmissionNum INTEGER NOT NULL PRIMARY KEY,
     AdmissionDate DATE NOT NULL,
     LeaveDate DATE, /*Assuming that a patient's leave date isn't always known */
@@ -100,7 +100,7 @@ CREATE TABLE Admission(
     CONSTRAINT CHK_Payment CHECK (InsurancePayment<=TotalPayment)
 );
 
-CREATE TABLE Examine(
+create table Examine(
     DoctorId INTEGER NOT NULL,
     AdmissionNum INTEGER NOT NULL,
     Comments VARCHAR(300), /* assuming not every exam requires a comment. doc can leave no comment (null) */
@@ -109,7 +109,7 @@ CREATE TABLE Examine(
     FOREIGN KEY (AdmissionNum) REFERENCES Admission(AdmissionNum)
 );
 
-CREATE TABLE StayIn(
+create table StayIn(
     AdmissionNum INTEGER NOT NULL,
     RoomNum INTEGER NOT NULL,
     StartDate DATE NOT NULL,
@@ -119,6 +119,81 @@ CREATE TABLE StayIn(
     FOREIGN KEY (RoomNum) REFERENCES Room(Num)
 );
 
+--Part 3 Data insertion
+
+--Doctor
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('59835','Amanda','Green','F','Nose');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('48396','Curtis','Cordova','M','Lungs');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('33951','Tiffany','Park','M','General');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('15844','Terri','Wolfe','F','Mouth');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('73205','Richard','Nichols','M','Brain');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('67393','Blake','Preston','F','Back');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('16729','Sandra','Romero','M','Nose');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('91088','Stephanie','Washington','M','Mouth');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('61531','Chris','Johnson','M','Nose');
+insert into Doctor(Id,FirstName,LastName,Gender,Specialty) values('67914','David','Weaver','F','Chest');
+
+
+--Patient
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('100081645','William','Jacobs','07809 Sanchez Falls Apt.','5281819495');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('749960232','Shannon','Johnson','987 Ethan Avenue','8566653428');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('129896304','Dawn','Sherman','PSC 8224, Box 9826','7630264412');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('236056202','Bobby','Garcia','60143 Smith Fields','6282007745');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('986031220','Michael','Jackson','928 Patel Estates Leeches','7035758669');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('249175256','Chris','Suarez','86570 Gardner Mission Apt.','6581046444');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('743450197','Austin','Collins','73304 Marsh Orchard North W','1066168043');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('559207164','Mrs.','Morales','3937 Timothy Mountains','911009678');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('760907382','Anne','Phillips','80292 John Forges','8056277602');
+insert into Patient(SSN,FirstName,LastName,Address,TelNum) values('324402615','David','Wolf','41208 Thompson Turnpike','390194562');
+
+--Room
+insert into Room(Num,Occupied) values('172','1');
+insert into Room(Num,Occupied) values('800','1');
+insert into Room(Num,Occupied) values('335','1');
+insert into Room(Num,Occupied) values('586','0');
+insert into Room(Num,Occupied) values('879','0');
+insert into Room(Num,Occupied) values('461','1');
+insert into Room(Num,Occupied) values('782','0');
+insert into Room(Num,Occupied) values('678','1');
+insert into Room(Num,Occupied) values('871','1');
+insert into Room(Num,Occupied) values('636','1');
+
+--Room 172
+insert into RoomService(RoomNum, Service) values (172, 'Emergency');
+insert into RoomService(RoomNum, Service) values (172, 'Surgery');
+
+--Room800
+insert into RoomService(RoomNum, Service) values (800, 'Pharmacy');
+insert into RoomService(RoomNum, Service) values (800, 'Billing');
+
+--Rooom335
+insert into RoomService(RoomNum, Service) values (335, 'Waiting Room');
+insert into RoomService(RoomNum, Service) values (335, 'Morgue');
+
+
+--EquipmentType
+insert into EquipmentType(Id, Description, ModelType, Instructions) values ('100', 'Surgical', 'Damaging', 'Be Careful');
+insert into EquipmentType(Id, Description, ModelType, Instructions) values ('200', 'Stitching', 'Healing', 'Take Care');
+insert into EquipmentType(Id, Description, ModelType, Instructions) values ('300', 'Pills', 'Treatment', 'No OD');
+
+--Equipment todo
+insert into Equipment(Serial, TypeId, PurchaseYear, LastInspection, RoomNum) values ('1', '100', )
+
+--Admission todo
+insert into Admission(admissionnum, admissiondate, leavedate, totalpayment, insurancepayment, patientssn, futurevisit) values ()
+
+--Employee todo
+
+    -- 10Regular todo
+    insert into Employee(id, fname, lname, salary, jobtitle, officenum, emprank, supervisorid) values ()
+
+    --4 division manager todo
+
+    --2 general manager todo
+
+
+--End Part 3, Begin Part 2.
+---------------------------------------------------------------------------------------------------------------------------------
 
 --1
 SELECT Room.Num
@@ -181,7 +256,7 @@ Group By JobTitle;
 Select SSN, FirstName, LastName, FutureVisit
 From Patient NATURAL JOIN (
     Select PatientSSN as SSN, FutureVisit
-    From Admission)
+    From Admission);
 
 --9
 Select ID, ModelType, Units
@@ -215,3 +290,5 @@ Intersect
     (Select TypeID
     From Equipment
     Where PurchaseYear = TO_DATE('2011', 'yyyy'));
+
+
