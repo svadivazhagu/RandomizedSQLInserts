@@ -131,3 +131,87 @@ FROM Employee
 WHERE SupervisorId = 10
 AND
 JobTitle = 'Regular'
+
+--3
+Select PatientSSN, Sum(InsurancePayment) AS Total
+From Admission
+Group By PatientSSN
+Union
+(Select SSN AS PatientSSN, 0 AS Total
+From Patient
+Minus
+(Select PatientSSN, 0 AS Total
+From Admission));
+
+
+--4
+Select SSN, FirstName, LastName, Visits
+From Patient NATURAL JOIN (
+Select PatientSSN AS SSN, Count(*) AS Visits
+From Admission
+Group By PatientSSN)
+Union
+(Select SSN, FirstName, LastName, 0 AS Visits
+From Patient
+Minus
+(Select SSN, FirstName, LastName, Visits
+From Patient NATURAL JOIN (
+Select PatientSSN AS SSN, 0 AS Visits
+From Admission)));
+
+--5
+SELECT RoomNum
+FROM Equipment
+WHERE SERIAL = 0;
+
+--6
+Select EmpId, Max(Rooms)
+From
+(Select EmpId, Count(RoomNum) AS Rooms
+From RoomAccess
+Group By EmpID)
+Group By EmpID;
+
+--7
+Select JobTitle AS Type, Count(JobTitle) AS Count
+From Employee
+Group By JobTitle;
+
+--8
+Select SSN, FirstName, LastName, FutureVisit
+From Patient NATURAL JOIN (
+    Select PatientSSN as SSN, FutureVisit
+    From Admission)
+
+--9
+Select ID, ModelType, Units
+From EquipmentType NATURAL JOIN (
+    Select TypeID AS ID, Count(*) as Units
+    From Equipment
+    Group By TypeID)
+Where Units > 3;
+
+--10
+Select Max(FutureVisit)
+From Admission
+Where PatientSSN = '111-22-3333';
+
+--11
+Select DoctorID
+From
+    (Select DoctorID, Count(AdmissionNum) as Examinations
+    From Examine NATURAL JOIN (
+        Select AdmissionNum AS AdmissionNum
+        From Admission
+        Where PatientSSN = '111-22-3333')
+    Group By DoctorID)
+Where Examinations > 2;
+
+--12
+Select TypeID
+From Equipment
+Where PurchaseYear = TO_DATE('2010', 'yyyy')
+Intersect
+    (Select TypeID
+    From Equipment
+    Where PurchaseYear = TO_DATE('2011', 'yyyy'));

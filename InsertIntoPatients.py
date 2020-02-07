@@ -6,15 +6,17 @@ from random import randint, choice
 
 
 def printPatient(numPatients):
+    f = open("printPatients.sql", 'w')
+
     for i in range(numPatients):
         person = faker.Faker()
         ssn = "'" + str(randint(100000000, 999999999)) + "'"
         fname = "'" + person.name().split(' ')[0] + "'"
         lname = "'" + person.name().split(' ')[1] + "'"
-        addy = "'" + str(person.address()[:randint(20, 35)]) + "'"
+        addy = "'" + str(person.address()[:randint(20, 29)]) + "'"
         telnum = "'" + str(randint(100000000, 9999999999)) + "'"
 
-        print('INSERT INTO Patient'
+        f.write('INSERT INTO Patient'
               + '('
               + 'SSN'
               + ','
@@ -37,7 +39,8 @@ def printPatient(numPatients):
               + addy
               + ','
               + telnum
-              + ');')
+              + ');\n')
+    f.close()
 
 
 def printDoctors(numDoctors):
@@ -111,8 +114,4 @@ def printRoomService(numRoomService):
 
 
 
-
-printRooms(10)
 printPatient(10)
-printDoctors(10)
-
